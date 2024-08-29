@@ -1,0 +1,23 @@
+import React, { useState, useEffect } from "react";
+import TabDoctors from "./TabDoctors";
+import GetUserData from "../../Auth/GetUserData";
+
+function TabDoctorsOfHospital() {
+  const [lekari, setLekari] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("hospit-user");
+    const userDataHelper = GetUserData(token);
+    const headers = { authorization: "Bearer " + token };
+    fetch(`/lekar/lekari/${userDataHelper.UserInfo.userid}`, { headers })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setLekari(data);
+      });
+  }, []);
+
+  return <div>{lekari && <TabDoctors lekari={lekari} />}</div>;
+}
+
+export default TabDoctorsOfHospital;
